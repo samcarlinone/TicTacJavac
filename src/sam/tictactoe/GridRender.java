@@ -20,17 +20,8 @@ public class GridRender {
         char MID_MID = ('╬');
     }
 
-    public static void testPrint() {
-        char[] test = new char[] {Borders.TOP_LEFT, Borders.HORIZONTAL, Borders.MID_TOP, Borders.HORIZONTAL, Borders.TOP_RIGHT,
-                                  Borders.VERTICAL, 'X', Borders.VERTICAL, 'O', Borders.VERTICAL,
-                                  Borders.MID_LEFT, Borders.HORIZONTAL, Borders.MID_MID, Borders.HORIZONTAL, Borders.MID_RIGHT,
-                                  Borders.VERTICAL, 'X', Borders.VERTICAL, 'X', Borders.VERTICAL,
-                                  Borders.BOT_LEFT, Borders.HORIZONTAL, Borders.MID_BOT, Borders.HORIZONTAL, Borders.BOT_RIGHT};
-
-        printSq(test);
-    }
-
     public static void printSq(char[] data) {
+        System.out.println(Integer.toString(data.length));
         int size = (int) Math.sqrt(data.length);
 
         for(int i=0; i<size; i++) {
@@ -51,32 +42,32 @@ public class GridRender {
 
         //Render middle
         for(int i=1; i<finalSize-1; i++) {
-            //Render data row
-            for (int j=0; j<size; j++) {
-                result[i*finalSize + j*2] = Borders.VERTICAL;
-                result[i*finalSize + j*2 + 1] = data[0];
+            if(i % 2 == 1) {
+                //Render data row
+                for (int j = 0; j < size; j++) {
+                    result[i * finalSize + j * 2] = Borders.VERTICAL;
+                    result[i * finalSize + j * 2 + 1] = data[(i-1)/2 * size + j];
+                }
+
+                result[i * finalSize + finalSize - 1] = Borders.VERTICAL;
+            } else {
+                //Render middle row
+                result[i * finalSize] = Borders.MID_LEFT;
+                fill(result, i * finalSize + 1, i * finalSize + finalSize - 2, new char[]{Borders.HORIZONTAL, Borders.MID_MID});
+                result[i * finalSize + finalSize - 1] = Borders.MID_RIGHT;
             }
-
-            result[i*finalSize + finalSize-1] = Borders.VERTICAL;
-
-            //Render middle row
-            i += 1;
-
-            result[i*finalSize] = Borders.MID_RIGHT;
-            fill(result, i*finalSize+1, i*finalSize+finalSize-2, new char[]{Borders.HORIZONTAL, Borders.MID_MID, 1, 1});
-            result[i*finalSize+finalSize-1] = Borders.MID_LEFT;
         }
 
         //Render bottom row
         result[finalSize * (finalSize-1)] = Borders.BOT_LEFT;
-        fill(result, finalSize*(finalSize-1)+1, finalSize*(finalSize)-2, new char[]{Borders.HORIZONTAL, Borders.MID_BOT});
+        fill(result, finalSize*(finalSize-1)+1, finalSize*(finalSize)-1, new char[]{Borders.HORIZONTAL, Borders.MID_BOT});
         result[finalSize*finalSize-1] = Borders.BOT_RIGHT;
 
         return result;
     }
 
     private static void fill(char[] in, int startIndex, int endIndex, char[] chars) {
-        for(int i=startIndex; i<endIndex; i++) {
+        for(int i=startIndex; i<=endIndex; i++) {
             in[i] = chars[(i-startIndex) % chars.length];
         }
     }

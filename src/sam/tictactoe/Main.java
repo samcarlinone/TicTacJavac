@@ -8,9 +8,11 @@ public class Main {
     public static void main(String[] args) {
         // write your code here
         Board b = new Board(3);
-        //System.out.println(GridRender.render(b.getState()));
-        //GridRender.printSq(GridRender.render(b.getState()));
-        GridRender.testPrint();
+
+        b.setChar('O', 1, 1);
+        b.setChar('O', 2);
+        
+        GridRender.printSq(GridRender.render(b.getState()));
 
         System.out.println("Things are in motion");
     }
