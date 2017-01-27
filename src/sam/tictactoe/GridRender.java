@@ -20,6 +20,10 @@ public class GridRender {
         char MID_MID = ('╬');
     }
 
+    /**
+     * Takes flat data of square area and prints it properly to console
+     * @param data flat array in
+     */
     public static void printSq(char[] data) {
         System.out.println(Integer.toString(data.length));
         int size = (int) Math.sqrt(data.length);
@@ -29,6 +33,11 @@ public class GridRender {
         }
     }
 
+    /**
+     * Renders a regular board of any size
+     * @param data board data in flat array
+     * @return processed data with borders, still flat
+     */
     public static char[] render(char[] data) {
         int size = (int) Math.sqrt(data.length);
         int finalSize = size*2+1;
@@ -66,6 +75,13 @@ public class GridRender {
         return result;
     }
 
+    /**
+     * Fills a secondary array into a segment of the in array
+     * @param in target array
+     * @param startIndex beginning index inclusive
+     * @param endIndex ending index inclusive
+     * @param chars char array to sample from
+     */
     private static void fill(char[] in, int startIndex, int endIndex, char[] chars) {
         for(int i=startIndex; i<=endIndex; i++) {
             in[i] = chars[(i-startIndex) % chars.length];
