@@ -21,8 +21,8 @@ public class Board {
      * @param size size of square board in characters
      */
     public Board(char[] state, int size) {
-        state = state;
-        size = size;
+        this.state = state;
+        this.size = size;
     }
 
     /**
@@ -35,7 +35,7 @@ public class Board {
         for(int i=0; i<size*size; i++)
             state[i] = ' ';
 
-        size = size;
+        this.size = size;
 
         boardState = BoardState.EMPTY;
     }
