@@ -12,7 +12,6 @@ public class Main {
         b.setChar('O', 1, 1);
         b.setChar('O', 2);
 
-        GridRender.printSq(GridRender.render(b.getState()));
-        System.out.println("Things are in motion");
+        GridRender.print(GridRender.render(b.getState()), 13);
     }
 }
