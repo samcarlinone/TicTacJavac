@@ -4,7 +4,7 @@ package sam.tictactoe;
  * Created by CARLINSE1 on 1/27/2017.
  */
 public class Board {
-    private char[] state;
+    private char[] data;
 
     public int size;
 
@@ -17,11 +17,11 @@ public class Board {
 
     /**
      * Board constructor from existing data
-     * @param state a character array of state, ' ' (space) is reserved
+     * @param data a character array of data, ' ' (space) is reserved
      * @param size size of square board in characters
      */
-    public Board(char[] state, int size) {
-        this.state = state;
+    public Board(char[] data, int size) {
+        this.data = data;
         this.size = size;
     }
 
@@ -30,10 +30,10 @@ public class Board {
      * @param size size of square board in characters
      */
     public Board(int size) {
-        state = new char[size*size];
+        data = new char[size*size];
 
         for(int i=0; i<size*size; i++)
-            state[i] = ' ';
+            data[i] = ' ';
 
         this.size = size;
 
@@ -41,19 +41,19 @@ public class Board {
     }
 
     /**
-     * Get char from state by index
+     * Get char from data by index
      * @param index flat array of character
      * @return The character at index or 'e' if index out of bounds
      */
     public char getChar(int index) {
-        if(index < 0 || state.length <= index)
+        if(index < 0 || data.length <= index)
             return 'e';
 
-        return state[index];
+        return data[index];
     }
 
     /**
-     * Get char from state by pos
+     * Get char from data by pos
      * @param x x coordinate
      * @param y y coordinate
      * @return The character at pos (x, y) or 'e' if index out of bounds
@@ -62,25 +62,25 @@ public class Board {
         if(x < 0 || y < 0 || size <= x || size <= y)
             return 'e';
 
-        return state[x + y*size];
+        return data[x + y*size];
     }
 
     /**
-     * Set char in state by index
+     * Set char in data by index
      * @param c new character, (space) is taken to mean empty place
      * @param index validated index, out of bounds index results in no change
      */
     public void setChar(char c, int index) {
-        if(index < 0 || state.length <= index)
+        if(index < 0 || data.length <= index)
             return;
 
-        state[index] = c;
+        data[index] = c;
 
         updateState();
     }
 
     /**
-     * Set char in state by pos
+     * Set char in data by pos
      * @param c new character, (space) is taken to mean empty place
      * @param x validated x coord
      * @param y validated y coord
@@ -89,13 +89,13 @@ public class Board {
         if(x < 0 || y < 0 || size <= x || size <= y)
             return;
 
-        state[x + y*size] = c;
+        data[x + y*size] = c;
 
         updateState();
     }
 
     /**
-     * Updates boardState and winner internally, and returns new state
+     * Updates boardState and winner internally, and returns new data
      * @return Current boardState
      */
     private BoardState updateState() {
@@ -164,7 +164,7 @@ public class Board {
     }
 
     /**
-     * Gets the state of a row
+     * Gets the data of a row
      * @param row The row index [0, height - 1]
      * @return The return value will be a char if the row is all one char, an 'e' if the row is out-of-bounds, or an '!' if the row is mixed
      */
@@ -182,7 +182,7 @@ public class Board {
     }
 
     /**
-     * Gets the state of a column
+     * Gets the data of a column
      * @param col The column index [0, column - 1]
      * @return The return value will be a char if the column is all one char, an 'e' if the column is out-of-bounds, or an '!' if the column is mixed
      */
@@ -200,7 +200,7 @@ public class Board {
     }
 
     /**
-     * Gets the state of the rising diagonal (/)
+     * Gets the data of the rising diagonal (/)
      * @return The return value will be the char if the diagonal is one char, or an '!' if the diagonal is mixed
      */
     public char getRisingDiag() {
@@ -214,7 +214,7 @@ public class Board {
     }
 
     /**
-     * Gets the state of the falling diagonal (\)
+     * Gets the data of the falling diagonal (\)
      * @return The return value will be the char if the diagonal is one char, or an '!' if the diagonal is mixed
      */
     public char getFallingDiag() {
@@ -228,10 +228,10 @@ public class Board {
     }
 
     /**
-     * Returns a char array of the state
-     * @return flat state char array
+     * Returns a char array of the data
+     * @return flat data char array
      */
-    public char[] getState() {
-        return state;
+    public char[] getData() {
+        return data;
     }
 }
