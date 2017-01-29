@@ -75,6 +75,8 @@ public class Board {
             return;
 
         state[index] = c;
+
+        updateState();
     }
 
     /**
@@ -88,6 +90,8 @@ public class Board {
             return;
 
         state[x + y*size] = c;
+
+        updateState();
     }
 
     /**
@@ -116,7 +120,7 @@ public class Board {
             if(col != ' ') {
                 partial = true;
 
-                if(col == '!') {
+                if(col != '!') {
                     //The column is not mixed or empty, so someone won
                     winner = col;
                     return boardState = BoardState.WON;
@@ -126,14 +130,14 @@ public class Board {
 
         //Check diagonals
         char diagR = getRisingDiag();
-        if(diagR != ' ' && diagR == '!') {
+        if(diagR != ' ' && diagR != '!') {
             //The column is not mixed or empty, so someone won
             winner = diagR;
             return boardState = BoardState.WON;
         }
 
         char diagF = getFallingDiag();
-        if(diagF != ' ' && diagF == '!') {
+        if(diagF != ' ' && diagF != '!') {
             //The column is not mixed or empty, so someone won
             winner = diagF;
             return boardState = BoardState.WON;
@@ -203,7 +207,7 @@ public class Board {
         char diag_val = getChar(0, size-1);
 
         for(int i=1; i<size; i++)
-            if(getChar(i, size-i) != diag_val)
+            if(getChar(i, size-i-1) != diag_val)
                 return '!';
 
         return diag_val;

@@ -20,11 +20,11 @@ public class GridRender {
     static final char MID_MID = ('╬');
 
     /**
-     * Takes flat data of square area and prints it properly to console
+     * Takes flat data with line of rowSize and prints to console
      * @param data flat array in
+     * @param rowSize length of one row
      */
     public static void print(char[] data, int rowSize) {
-        System.out.println(Integer.toString(data.length));
         int size = data.length/rowSize;
 
         for(int i=0; i<size; i++) {
