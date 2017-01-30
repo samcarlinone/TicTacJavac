@@ -2,6 +2,8 @@ package sam.tictactoe;
 
 
 import java.io.IOException;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Created by CARLINSE1 on 1/27/2017.
@@ -12,14 +14,23 @@ public class Main {
         //TwoPlayerGame.run();
 
         try {
-            MulticastClientThread client = new MulticastClientThread();
-            client.run();
-            for(int i=0; i<10; i++)
-                client.run();
-            System.out.println("DOne clienting");
+            MulticastDiscoveryThread lan_discovery = new MulticastDiscoveryThread();
 
-            MulticastServerThread server = new MulticastServerThread();
-            server.run();
+            BlockingQueue<String> queue = new ArrayBlockingQueue<String>(128);
+
+            lan_discovery.start(queue);
+            System.out.println("Thread running");
+
+            String s = "";
+
+            try {
+                s = queue.take();
+            } catch (InterruptedException e) {
+                System.out.println("Threading Error");
+            }
+
+            System.out.println(s);
+
         } catch(IOException e) {
             System.out.println("Network error");
         }
