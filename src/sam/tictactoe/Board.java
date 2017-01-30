@@ -96,9 +96,13 @@ public class Board {
 
     /**
      * Updates boardState and winner internally, and returns new data
+     * Once a winner is found state will no longer be changed
      * @return Current boardState
      */
     private BoardState updateState() {
+        if(winner != ' ')
+            return BoardState.WON;
+
         Boolean partial = false;
 
         //Check rows + columns
