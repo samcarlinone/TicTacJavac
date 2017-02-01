@@ -12,6 +12,8 @@ public class MulticastDiscoveryThread extends Thread{
     protected DatagramSocket socket = null;
 
     private long FIVE_SECONDS = 5000;
+    private int LISTEN_TIMEOUT = 3000;
+
     public ArrayBlockingQueue<String> queue;
 
     public MulticastDiscoveryThread() throws IOException {
@@ -103,7 +105,7 @@ public class MulticastDiscoveryThread extends Thread{
         byte[] buf = new byte[256];
         packet = new DatagramPacket(buf, buf.length);
 
-        socket.setSoTimeout(10000);
+        socket.setSoTimeout(LISTEN_TIMEOUT);
 
         String received = "";
 
