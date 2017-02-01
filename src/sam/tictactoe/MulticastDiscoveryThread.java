@@ -3,6 +3,7 @@ package sam.tictactoe;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -12,19 +13,16 @@ public class MulticastDiscoveryThread extends Thread{
     protected DatagramSocket socket = null;
 
     private long FIVE_SECONDS = 5000;
-    private BlockingQueue<String> queue;
+    public ArrayBlockingQueue<String> queue;
 
     public MulticastDiscoveryThread() throws IOException {
         super("MulticastDiscoveryThread");
+
+        queue = new ArrayBlockingQueue<String>(128, true);
     }
 
-    public void start(BlockingQueue<String> queue) {
-        run(queue);
-    }
-
-    public void run(BlockingQueue<String> queue) {
+    public void run() {
         String target = "";
-        this.queue = queue;
 
         try {
             target = listen();
@@ -32,17 +30,17 @@ public class MulticastDiscoveryThread extends Thread{
             System.out.println("Network Error");
         }
 
+        try {
+            queue.put(target);
+        } catch(InterruptedException e) {
+            System.out.println("Queue Error");
+        }
+
         if(target.equals("")) {
             try {
                 bcast();
             } catch( IOException e) {
                 System.out.println("Network Error");
-            }
-        } else {
-            try {
-                queue.put(target);
-            } catch(InterruptedException e) {
-                System.out.println("Thread communication error");
             }
         }
     }
@@ -58,11 +56,9 @@ public class MulticastDiscoveryThread extends Thread{
 
         while (waiting) {
             try {
-                byte[] buf = new byte[256];
-
-                // construct quote
-                String dString = InetAddress.getLocalHost().toString();
-                buf = dString.getBytes();
+                // Get current internet address
+                String dString = getHostAddresses()[0];
+                byte[] buf = dString.getBytes();
 
                 System.out.println(dString);
 
@@ -71,6 +67,11 @@ public class MulticastDiscoveryThread extends Thread{
                 DatagramPacket packet = new DatagramPacket(buf, buf.length, group, 4446);
 
                 socket.send(packet);
+
+                if(queue.poll() != null) {
+                    socket.close();
+                    return;
+                }
 
                 // sleep for a while
                 try {
@@ -111,5 +112,26 @@ public class MulticastDiscoveryThread extends Thread{
         socket.close();
 
         return recieved;
+    }
+
+    /**
+     * Gets host address that are actually connected / don't loopback
+     * http://stackoverflow.com/questions/2381316/java-inetaddress-getlocalhost-returns-127-0-0-1-how-to-get-real-ip
+     * @return Returns stringified ip addresses e.g. (10.23.105.218)
+     */
+    private String[] getHostAddresses() {
+        Set<String> HostAddresses = new HashSet<>();
+        try {
+            for (NetworkInterface ni : Collections.list(NetworkInterface.getNetworkInterfaces())) {
+                if (!ni.isLoopback() && ni.isUp() && ni.getHardwareAddress() != null) {
+                    for (InterfaceAddress ia : ni.getInterfaceAddresses()) {
+                        if (ia.getBroadcast() != null) {  //If limited to IPV4
+                            HostAddresses.add(ia.getAddress().getHostAddress());
+                        }
+                    }
+                }
+            }
+        } catch (SocketException e) { }
+        return HostAddresses.toArray(new String[0]);
     }
 }

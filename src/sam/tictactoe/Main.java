@@ -13,26 +13,7 @@ public class Main {
         // write your code here
         //TwoPlayerGame.run();
 
-        try {
-            MulticastDiscoveryThread lan_discovery = new MulticastDiscoveryThread();
-
-            BlockingQueue<String> queue = new ArrayBlockingQueue<String>(128);
-
-            lan_discovery.start(queue);
-            System.out.println("Thread running");
-
-            String s = "";
-
-            try {
-                s = queue.take();
-            } catch (InterruptedException e) {
-                System.out.println("Threading Error");
-            }
-
-            System.out.println(s);
-
-        } catch(IOException e) {
-            System.out.println("Network error");
-        }
+        LANConnector connector = new LANConnector();
+        connector.connect();
     }
 }
