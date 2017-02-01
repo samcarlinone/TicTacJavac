@@ -1,5 +1,7 @@
 package sam.tictactoe;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.io.IOException;
 
 /**
@@ -10,39 +12,36 @@ public class LANConnector {
         //Do nothing
     }
 
-    public void connect() {
+    public TCPLink connect() {
+        TCPLink link = null;
+
         try {
             MulticastDiscoveryThread lan_discovery = new MulticastDiscoveryThread();
             lan_discovery.start();
-
-            System.out.println("Thread running");
 
             String host = "";
 
             try {
                 host = lan_discovery.queue.take();
 
-                TCPLink link = new TCPLink(host);
+                link = new TCPLink(host);
 
                 if(host == "") {
-                    System.out.println("No hosts found, broadcasting ...");
-
-                    System.out.println(link.read());
+                    //Block and wait for connection
+                    link.read();
 
                     lan_discovery.queue.put("terminate");
                 } else {
-                    System.out.println("Found: " + host);
-
+                    //Send message to signal connection
                     link.write("Hello world.");
                 }
             } catch (InterruptedException e) {
                 System.out.println("Threading Error");
             }
-
-            System.out.println("Main thread terminating");
-
         } catch(IOException e) {
             System.out.println("Network error");
         }
+
+        return link;
     }
 }

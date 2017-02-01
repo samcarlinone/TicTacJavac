@@ -13,7 +13,7 @@ public class Main {
         // write your code here
         //TwoPlayerGame.run();
 
-        LANConnector connector = new LANConnector();
-        connector.connect();
+        TCPLink link = new LANConnector().connect();
+        LANTwoPlayerGame.run(link);
     }
 }

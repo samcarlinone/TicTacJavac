@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 
 /**
  * Created by CARLINSE1 on 1/29/2017.
@@ -45,6 +44,10 @@ public class MulticastDiscoveryThread extends Thread{
         }
     }
 
+    /**
+     * Repeatedly transmits local IP ad infinitum
+     * @throws IOException
+     */
     public void bcast() throws IOException {
         try {
             socket = new DatagramSocket(35035);
@@ -60,14 +63,13 @@ public class MulticastDiscoveryThread extends Thread{
                 String dString = getHostAddresses()[0];
                 byte[] buf = dString.getBytes();
 
-                System.out.println(dString);
-
                 // send it
                 InetAddress group = InetAddress.getByName("230.0.0.1");
                 DatagramPacket packet = new DatagramPacket(buf, buf.length, group, 4446);
 
                 socket.send(packet);
 
+                //Check for termination command
                 if(queue.poll() != null) {
                     socket.close();
                     return;
@@ -85,6 +87,11 @@ public class MulticastDiscoveryThread extends Thread{
         socket.close();
     }
 
+    /**
+     * Listens for broadcasting hosts, returns IP address
+     * @return IP address of broadcasting host, as String
+     * @throws IOException
+     */
     public String listen() throws IOException {
         MulticastSocket socket = new MulticastSocket(4446);
         InetAddress address = InetAddress.getByName("230.0.0.1");
@@ -98,20 +105,19 @@ public class MulticastDiscoveryThread extends Thread{
 
         socket.setSoTimeout(10000);
 
-        String recieved = "";
+        String received = "";
 
         try {
             socket.receive(packet);
-            recieved = new String(packet.getData(), 0, packet.getLength());
-            System.out.println("InetAddress: " + recieved);
+            received = new String(packet.getData(), 0, packet.getLength());
         } catch(SocketTimeoutException e){
-            System.out.println("Timed out");
+            //Don't need to do anything
         }
 
         socket.leaveGroup(address);
         socket.close();
 
-        return recieved;
+        return received;
     }
 
     /**
