@@ -5,12 +5,12 @@ import java.util.Scanner;
 /**
  * Created by CARLINSE1 on 1/28/2017.
  */
-public class TwoPlayerGame {
+public class TwoPlayerGame implements Game {
     /**
      * Run the game (synchronous)
      */
 
-    public static void run() {
+    public void run() {
         Board board = new Board(3);
         Boolean player1Turn = true;
         Scanner scnr = new Scanner(System.in);
@@ -61,7 +61,11 @@ public class TwoPlayerGame {
     /**
      * Prints help message
      */
-    public static void printHelp() {
+    public void printHelp() {
         GridRender.print(GridRender.render("123456789".toCharArray()), 13);
+    }
+
+    public String description() {
+        return "Simple two player game, players take turns";
     }
 }

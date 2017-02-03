@@ -5,12 +5,14 @@ import java.util.Scanner;
 /**
  * Created by CARLINSE1 on 1/28/2017.
  */
-public class LANTwoPlayerGame {
+public class LANTwoPlayerGame implements Game {
+
     /**
      * Run the game (synchronous)
      */
+    public void run() {
+        TCPLink link = new LANConnector().connect();
 
-    public static void run(TCPLink link) {
         Board board = new Board(3);
         Boolean myTurn = link.isHost;
 
@@ -93,7 +95,11 @@ public class LANTwoPlayerGame {
     /**
      * Prints help message
      */
-    public static void printHelp() {
+    public void printHelp() {
         GridRender.print(GridRender.render("123456789".toCharArray()), 13);
+    }
+
+    public String description() {
+        return "LAN two player game, automatically connects to other players";
     }
 }
