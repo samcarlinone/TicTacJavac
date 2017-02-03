@@ -13,6 +13,8 @@ public class LANConnector {
     }
 
     public TCPLink connect() {
+        System.out.print("Searching for peers ... ");
+
         TCPLink link = null;
 
         try {
@@ -41,6 +43,8 @@ public class LANConnector {
         } catch(IOException e) {
             System.out.println("Network error");
         }
+
+        System.out.println("connected.");
 
         return link;
     }
